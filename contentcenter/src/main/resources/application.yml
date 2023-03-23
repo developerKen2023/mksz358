@@ -1,0 +1,60 @@
+server:
+  port: 8020
+
+spring:
+  application:
+    name: content-center
+  datasource:
+    url: jdbc:mysql://localhost:3306/content_center
+    hikari:
+      username: root
+      password: mysql
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      server-addr: localhost:8850
+      discovery:
+        cluster-name: guangzhou
+    sentinel:
+      transport:
+        dashboard: http://localhost:8899
+      filter:
+        enabled: true
+      enabled: true
+
+user-center:
+  ribbon:
+    # IRule
+    NFLoadBalancerRuleClassName: com.ken.mksz358.contentcenter.configuration.ribbon.NacosSameClusterWeightedRule
+
+ribbon:
+  eager-load:
+    enabled: true
+    #clients: user-center
+
+#优化feign
+feign:
+  httpclient:
+    enabled: true
+  sentinel:
+    enabled: true
+
+#细粒度配置 针对user-center
+#feign:
+#  client:
+#    config:
+#      user-center:
+#        logger-level: full
+
+#全局配置
+#feign:
+#  client:
+#    config:
+#      default:
+#        logger-level: full
+# log is debug mode
+logging:
+  level:
+    com.ken.mksz358.contentcenter: debug
+
+
