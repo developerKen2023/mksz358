@@ -31,7 +31,7 @@ public class NacosDataSourceInit implements InitFunc {
 
     private static final String APP_NAME = AppNameUtil.getAppName();
 
-    private final String remoteAddress = "localhost:8850";
+    private final String remoteAddress = "localhost:8848";
     private final String groupId = "SENTINEL_GROUP";
 
     private final String flowDataId = APP_NAME + SentinelConstants.FLOW_POSTFIX;
