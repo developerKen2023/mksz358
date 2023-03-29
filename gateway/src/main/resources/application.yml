@@ -38,9 +38,9 @@ spring:
       eager: true
       transport:
         dashboard: http://localhost:8080
-  redis:
-    host: 127.0.0.1
-    port: 6379
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
 management:
   endpoints:
     web:
@@ -53,7 +53,9 @@ management:
 ken:
   gateway:
     api:
-      groups:
-        - "MR"
-        - "other"
-      permitsPerSecond: 1
+      groupsMap:
+        MRPlus: 0.6
+        SA: 0.2
+        other: 0.2
+      totalPermitsPerSecond: 100
+      tokenName: JWT-TOKEN
