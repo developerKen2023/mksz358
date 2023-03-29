@@ -94,10 +94,10 @@ public class CustomRequestRateLimit implements GatewayFilter, Ordered {
             currentRate = countCacheRate > config.getGroupsMap().get(group) ? countCacheRate : config.getGroupsMap().get(group);
         }
 
-        log.info("group:{},currentRate:{},after calculating rate:{}", group, currentRate, currentRate * config.getTotalPermitsPerSecond());
-
         RateLimiter rateLimiter = RATE_LIMITER_CACHE.get(group, () ->
                 RateLimiter.create(currentRate * config.getTotalPermitsPerSecond()));
+
+        log.info("group:{},currentRate:{},current QPS:{}", group, currentRate, currentRate * config.getTotalPermitsPerSecond());
 
         if (rateLimiter.tryAcquire()) {
             return chain.filter(exchange);
