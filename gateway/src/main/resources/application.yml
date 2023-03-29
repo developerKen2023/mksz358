@@ -27,6 +27,7 @@ spring:
             - Path=/user/**
           filters:
             - StripPrefix=1
+            - CustomRequestRateLimit
         - id: order_route
           uri: lb://order-service
           predicates:
@@ -37,6 +38,9 @@ spring:
       eager: true
       transport:
         dashboard: http://localhost:8080
+  redis:
+    host: 127.0.0.1
+    port: 6379
 management:
   endpoints:
     web:
@@ -45,3 +49,11 @@ management:
   endpoint:
     health:
       show-details: always
+
+ken:
+  gateway:
+    api:
+      groups:
+        - "MR"
+        - "other"
+      permitsPerSecond: 1

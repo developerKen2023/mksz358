@@ -1,5 +1,7 @@
 package com.ken.mksz358.contentcenter.sentinel;
 
+import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
+import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.cluster.ClusterStateManager;
 import com.alibaba.csp.sentinel.cluster.client.config.ClusterClientAssignConfig;
 import com.alibaba.csp.sentinel.cluster.client.config.ClusterClientConfig;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 public class NacosDataSourceInit implements InitFunc {
@@ -32,12 +35,13 @@ public class NacosDataSourceInit implements InitFunc {
     private static final String APP_NAME = AppNameUtil.getAppName();
 
     private final String remoteAddress = "localhost:8848";
-    private final String groupId = "SENTINEL_GROUP";
+    private final String groupId = "DEFAULT_GROUP";
 
     private final String flowDataId = APP_NAME + SentinelConstants.FLOW_POSTFIX;
     private final String paramDataId = APP_NAME + SentinelConstants.PARAM_FLOW_POSTFIX;
     private final String configDataId = APP_NAME + "-cluster-client-config";
     private final String clusterMapDataId = APP_NAME + SentinelConstants.CLUSTER_MAP_POSTFIX;
+    private final String gwFlowDataId = APP_NAME + SentinelConstants.GW_FLOW_POSTFIX;
 
     @Override
     public void init() throws Exception {
@@ -70,9 +74,15 @@ public class NacosDataSourceInit implements InitFunc {
 
     private void initDynamicRuleProperty() {
         ReadableDataSource<String, List<FlowRule>> ruleSource = new NacosDataSource<>(remoteAddress, groupId,
-                flowDataId, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
+                flowDataId, source -> JSON.parseObject(source, new TypeReference<>() {
         }));
         FlowRuleManager.register2Property(ruleSource.getProperty());
+
+
+        ReadableDataSource<String, Set<GatewayFlowRule>> gwRuleSource = new NacosDataSource<>(remoteAddress, groupId,
+                flowDataId, source -> JSON.parseObject(source, new TypeReference<>() {
+        }));
+        GatewayRuleManager.register2Property(gwRuleSource.getProperty());
 
         ReadableDataSource<String, List<ParamFlowRule>> paramRuleSource = new NacosDataSource<>(remoteAddress, groupId,
                 paramDataId, source -> JSON.parseObject(source, new TypeReference<List<ParamFlowRule>>() {
