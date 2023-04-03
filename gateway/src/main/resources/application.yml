@@ -15,30 +15,39 @@ spring:
           lower-case-service-id: true
       routes:
         # Add your routes here.
+        # content start
         - id: contents_route
           uri: lb://content-center
           predicates:
-            - Path=/content/**
+            - Path=/contents/**
           filters:
             - StripPrefix=1
+        # content end
+
+        # auth start
+        - id: auths_route
+          uri: lb://auth-center
+          predicates:
+            - Path=/auths/**
+          filters:
+            - StripPrefix=1
+        # auth start
+
+        # user start
         - id: users_route
           uri: lb://user-center
           predicates:
-            - Path=/user/**
+            - Path=/users/**
           filters:
             - StripPrefix=1
             - name: RequestRateLimiter
               args:
-                key-resolver: "#{@hostAddrKeyResolver}"
+                key-resolver: "#{@lockKeyResolver}"
                 redis-rate-limiter.replenishRate: 10 # 令牌桶填充的速率 秒为单位
                 redis-rate-limiter.burstCapacity: 10 # 令牌桶总容量
                 redis-rate-limiter.requestedTokens: 1 # 每次请求获取的令牌数
-        - id: order_route
-          uri: lb://order-service
-          predicates:
-            - Path=/order/**
-          filters:
-            - StripPrefix=1
+        # user end
+
     sentinel:
       eager: true
       transport:
@@ -54,6 +63,15 @@ management:
   endpoint:
     health:
       show-details: always
+
+auth:
+  jwt:
+    secret: developerKenaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd
+    # 1 hour
+    expiration: 3600000
+    header: JWT-TOKEN
+    skipValidUrl: /auths/auth/login
+
 
 ken:
   gateway:

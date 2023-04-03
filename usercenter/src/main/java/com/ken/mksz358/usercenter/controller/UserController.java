@@ -1,5 +1,6 @@
 package com.ken.mksz358.usercenter.controller;
 
+import com.ken.mksz358.feignApi.pojo.UserLoginDto;
 import com.ken.mksz358.usercenter.domain.entity.user.User;
 import com.ken.mksz358.usercenter.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class UserController {
     public User findById(@PathVariable Integer id) {
         log.info("port:{}", port);
         return userService.findById(id);
+    }
+
+    @PostMapping("/addUser")
+    public User login(@RequestBody UserLoginDto userLoginDto) {
+        return userService.addUser(userLoginDto);
     }
 
     @GetMapping("/queryUser")

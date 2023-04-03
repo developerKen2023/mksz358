@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import tk.mybatis.spring.annotation.MapperScan;
 
 @MapperScan("com.ken")
-@SpringBootApplication(scanBasePackages = {"com.ken.mksz358"})
+@SpringBootApplication(scanBasePackages = {"com.ken.mksz358.contentcenter","com.ken.mksz358.feignApi"})
 @EnableFeignClients(clients = {UserCenterFeignClient.class})
 public class ContentCenterApplication {
     public static void main(String[] args) {

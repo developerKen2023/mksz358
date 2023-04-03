@@ -1,0 +1,26 @@
+server:
+  port: 8030
+
+spring:
+  application:
+    name: auth-center
+
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        group: DEFAULT_GROUP
+
+
+#优化feign
+feign:
+  httpclient:
+    enabled: true
+
+auth:
+  jwt:
+    secret: developerKenaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd
+    # 1 hour
+    expiration: 3600000
+    header: JWT-TOKEN
+    skipValidUrl: /auths/auth/login
