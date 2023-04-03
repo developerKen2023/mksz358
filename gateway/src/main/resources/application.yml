@@ -27,7 +27,12 @@ spring:
             - Path=/user/**
           filters:
             - StripPrefix=1
-            - CustomRequestRateLimit
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@hostAddrKeyResolver}"
+                redis-rate-limiter.replenishRate: 10 # 令牌桶填充的速率 秒为单位
+                redis-rate-limiter.burstCapacity: 10 # 令牌桶总容量
+                redis-rate-limiter.requestedTokens: 1 # 每次请求获取的令牌数
         - id: order_route
           uri: lb://order-service
           predicates:
@@ -38,9 +43,9 @@ spring:
       eager: true
       transport:
         dashboard: http://localhost:8080
-#  redis:
-#    host: 127.0.0.1
-#    port: 6379
+  redis:
+    host: 127.0.0.1
+    port: 6379
 management:
   endpoints:
     web:
@@ -57,5 +62,5 @@ ken:
         MRPlus: 0.6
         SA: 0.2
         other: 0.2
-      totalPermitsPerSecond: 100
+      totalPermitsPerSecond: 10
       tokenName: JWT-TOKEN
