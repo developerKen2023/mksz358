@@ -12,15 +12,14 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
-      server-addr: localhost:8850
+      server-addr: localhost:8848
       discovery:
         cluster-name: guangzhou
+        group: DEFAULT_GROUP
     sentinel:
       transport:
-        dashboard: http://localhost:8899
-      filter:
-        enabled: true
-      enabled: true
+        dashboard: http://localhost:8080
+      eager: true
 
 user-center:
   ribbon:

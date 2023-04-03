@@ -14,5 +14,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8850
-        cluster-name: Canada
+        server-addr: localhost:8848
+        cluster-name: gz
+        group: DEFAULT_GROUP
+    sentinel:
+      transport:
+        dashboard: http://localhost:8080
+      eager: true
