@@ -19,7 +19,7 @@ feign:
 
 auth:
   jwt:
-    secret: developerKenaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddd
+    secret: kikiKenSecret-kikiKenSecret-kikiKenSecret-kikiKenSecret
     # 1 hour
     expiration: 3600000
     header: JWT-TOKEN

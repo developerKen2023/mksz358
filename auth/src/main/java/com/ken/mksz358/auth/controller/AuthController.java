@@ -39,6 +39,11 @@ public class AuthController {
         return jwtOperator.validateToken(token, userId);
     }
 
+    @GetMapping("/getExpirationDate")
+    public String getExpirationDateFromToken(@RequestParam("token") String token) {
+        return jwtOperator.getExpirationDateFromToken(token);
+    }
+
     @GetMapping("/getUserIdFromRequest")
     public String getHeaders() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
