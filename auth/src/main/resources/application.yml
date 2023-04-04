@@ -23,4 +23,4 @@ auth:
     # 1 hour
     expiration: 3600000
     header: JWT-TOKEN
-    skipValidUrl: /auths/auth/login
+    skipValidUrlRegex: /auths/auth/.*

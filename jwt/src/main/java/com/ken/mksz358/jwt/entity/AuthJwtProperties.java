@@ -22,7 +22,7 @@ public class AuthJwtProperties {
     private String header;
 
     //跳过认证的路由
-    private String skipValidUrl;
+    private String skipValidUrlRegex;
 
     /**
      * 用户登录-用户名参数名称
