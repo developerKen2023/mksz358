@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class JwtOperator {
         stringRedisTemplate.opsForHash().put(JWT_CACHE_KEY + userId, ACCESS_TOKEN, tokenMap.get(ACCESS_TOKEN));
         stringRedisTemplate.opsForHash().put(JWT_CACHE_KEY + userId, REFRESH_TOKEN, tokenMap.get(REFRESH_TOKEN));
         //设置过期时间
-        stringRedisTemplate.expire(userId, jwtProperties.getExpiration() * 2, TimeUnit.MILLISECONDS);
+        stringRedisTemplate.expire(JWT_CACHE_KEY + userId, jwtProperties.getExpiration() * 2, TimeUnit.MILLISECONDS);
     }
 
     //生成令牌
@@ -223,6 +224,18 @@ public class JwtOperator {
     }
 
     /**
+     * 获取token的过期时间
+     *
+     * @param token token
+     * @return 过期时间
+     */
+    public String getExpirationDateFromToken(String token) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(getClaimsFromToken(token)
+                .getExpiration());
+    }
+
+    /**
      * 生成令牌
      *
      * @param claims 数据声明
@@ -249,10 +262,16 @@ public class JwtOperator {
      * @return 令牌
      */
     private String generateRefreshToken(Map<String, Object> claims) {
-        Date expirationDate = new Date(System.currentTimeMillis() + jwtProperties.getExpiration() * 2);
+        Date createdTime = new Date();
+        Date expirationDate = new Date(System.currentTimeMillis()
+                + jwtProperties.getExpiration() * 2);
+        byte[] keyBytes = jwtProperties.getSecret().getBytes();
+        SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+
         return Jwts.builder().setClaims(claims)
+                .setIssuedAt(createdTime)
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret())
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 

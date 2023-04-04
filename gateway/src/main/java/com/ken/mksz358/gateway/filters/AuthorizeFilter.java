@@ -27,8 +27,6 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class AuthorizeFilter implements GlobalFilter, Ordered {
 
-    private static final String AUTH_TOKEN_URL = "/auths/auth/login";
-    private static final String REFRESH_TOKEN_URL = "/auth/token/refresh";
     public static final String USER_ID = "userId";
     public static final String USER_NAME = "username";
 
@@ -46,7 +44,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
         ServerHttpRequest.Builder mutate = serverHttpRequest.mutate();
 
         //if url is login url or enabled jwt is false, skip
-        if (StringUtils.equals(AUTH_TOKEN_URL, urlPath) || !authJwtProperties.getEnabled())
+        if (urlPath.matches(authJwtProperties.getSkipValidUrlRegex()) || !authJwtProperties.getEnabled())
             return chain.filter(exchange);
 
         String token = getToken(serverHttpRequest);
