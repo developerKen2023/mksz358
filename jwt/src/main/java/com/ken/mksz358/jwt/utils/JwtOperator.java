@@ -25,6 +25,7 @@ public class JwtOperator {
     private static final String JWT_CACHE_KEY = "jwt:userId:";
     private static final String USER_ID = "userId";
     private static final String USER_NAME = "username";
+    private static final String ROLES = "roles";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String REFRESH_TOKEN = "refresh_token";
     private static final String EXPIRE_IN = "expire_in";
@@ -97,9 +98,9 @@ public class JwtOperator {
 
         Map<String, Object> claims = new HashMap<>(payloadSizes + 3);
         claims.put("sub", userId);
-        claims.put("username", username);
+        claims.put(USER_NAME, username);
         claims.put("created", new Date());
-        claims.put("roles", "user");
+        claims.put(ROLES, "user");
 
         if (payloadSizes > 0) {
             claims.putAll(payloads);
@@ -158,14 +159,19 @@ public class JwtOperator {
      * @return 用户名
      */
     public String getUserNameFromToken(String token) {
-        String username;
         try {
-            Claims claims = getClaimsFromToken(token);
-            username = (String) claims.get(USER_NAME);
+            return (String) getClaimsFromToken(token).get(USER_NAME);
         } catch (Exception e) {
-            username = null;
+            throw new NullPointerException();
         }
-        return username;
+    }
+
+    public String getRolesFromToken(String token) {
+        try {
+            return (String) getClaimsFromToken(token).get(ROLES);
+        } catch (Exception e) {
+            throw new NullPointerException();
+        }
     }
 
 
