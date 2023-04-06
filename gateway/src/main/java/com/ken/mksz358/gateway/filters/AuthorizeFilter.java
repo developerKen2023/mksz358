@@ -29,6 +29,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
 
     public static final String USER_ID = "userId";
     public static final String USER_NAME = "username";
+    public static final String ROLES = "roles";
 
     @Resource
     private AuthJwtProperties authJwtProperties;
@@ -57,6 +58,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
 
         String userId = jwtOperator.getUserIdFromToken(token);
         String username = jwtOperator.getUserNameFromToken(token);
+        String roles = jwtOperator.getRolesFromToken(token);
 
         //check userId whether is null or not
         if (StringUtils.isEmpty(userId))
@@ -65,6 +67,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
         //add header
         addHeader(mutate, USER_ID, userId);
         addHeader(mutate, USER_NAME, username);
+        addHeader(mutate, ROLES, roles);
 
         return chain.filter(exchange.mutate().request(mutate.build()).build());
     }

@@ -1,5 +1,6 @@
 package com.ken.mksz358.usercenter.controller;
 
+import com.ken.mksz358.feignApi.auth.CheckAuthorization;
 import com.ken.mksz358.feignApi.pojo.UserLoginDto;
 import com.ken.mksz358.usercenter.domain.entity.user.User;
 import com.ken.mksz358.usercenter.service.UserService;
@@ -20,6 +21,7 @@ public class UserController {
     @Value("${server.port}")
     public String port;
 
+    @CheckAuthorization("admin")
     @PostMapping("/{id}")
     public User findById(@PathVariable Integer id) {
         log.info("port:{}", port);
