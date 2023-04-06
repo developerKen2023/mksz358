@@ -20,23 +20,19 @@ public class AuthAspect {
     public static final String ROLES = "roles";
 
     @Around("@annotation(com.ken.mksz358.feignApi.auth.CheckAuthorization)")
-    public Object checkAuthorization(ProceedingJoinPoint point) {
-        try {
-            // get header from RequestContextHolder
-            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-            ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
-            HttpServletRequest request = attributes.getRequest();
-            String roles = request.getHeader(ROLES);
+    public Object checkAuthorization(ProceedingJoinPoint point) throws Throwable {
+        // get header from RequestContextHolder
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
+        HttpServletRequest request = attributes.getRequest();
+        String roles = request.getHeader(ROLES);
 
-            MethodSignature signature = (MethodSignature) point.getSignature();
-            Method method = signature.getMethod();
-            CheckAuthorization annotation = method.getAnnotation(CheckAuthorization.class);
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        Method method = signature.getMethod();
+        CheckAuthorization annotation = method.getAnnotation(CheckAuthorization.class);
 
-            if (!Objects.equals(roles, annotation.value()))
-                throw new SecurityException("user has not privilege to access");
-            return point.proceed();
-        } catch (Throwable e) {
+        if (!Objects.equals(roles, annotation.value()))
             throw new SecurityException("user has not privilege to access");
-        }
+        return point.proceed();
     }
 }

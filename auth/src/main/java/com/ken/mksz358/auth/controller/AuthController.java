@@ -5,6 +5,7 @@ import com.ken.mksz358.feignApi.pojo.UserDto;
 import com.ken.mksz358.feignApi.pojo.UserLoginDto;
 import com.ken.mksz358.jwt.entity.AuthJwtProperties;
 import com.ken.mksz358.jwt.utils.JwtOperator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -27,6 +28,9 @@ public class AuthController {
     @Resource
     private AuthJwtProperties authJwtProperties;
 
+    @Value("${your.configuration}")
+    private String testConfiguration;
+
     @PostMapping("/login")
     public Map<String, Object> authLogin(@RequestBody UserLoginDto loginDto) {
         UserDto userDto = userCenterFeignClient.addUser(loginDto);
@@ -41,7 +45,7 @@ public class AuthController {
 
     @GetMapping("/getExpirationDate")
     public String getExpirationDateFromToken(@RequestParam("token") String token) {
-        return jwtOperator.getExpirationDateFromToken(token);
+        return jwtOperator.getExpirationDateFromToken(token) + ":" + testConfiguration;
     }
 
     @GetMapping("/getUserIdFromRequest")
